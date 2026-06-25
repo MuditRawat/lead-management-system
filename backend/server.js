@@ -7,13 +7,12 @@ import leadRoutes from './routes/leadRoutes.js';
 
 const app = express();
 
-// Middleware - Configured to accept requests from Vercel
+// Middleware - Configured with a dynamic CORS policy to bypass browser blocking rules
 app.use(cors({
-  origin: [
-    'http://localhost:5173', 
-    'https://lead-management-system-sepia.vercel.app'
-  ],
-  credentials: true
+  origin: true, // Dynamically allows whatever frontend domain is making the request
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
