@@ -1,7 +1,6 @@
 import 'dotenv/config'; 
 import express from 'express';
 import cors from 'cors';
-import nodemailer from 'nodemailer';
 import connectDB from './config/db.js';
 import leadRoutes from './routes/leadRoutes.js';
 
@@ -9,7 +8,7 @@ const app = express();
 
 // Middleware - Configured with a dynamic CORS policy to bypass browser blocking rules
 app.use(cors({
-  origin: true, // Dynamically allows whatever frontend domain is making the request
+  origin: true, 
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -24,22 +23,8 @@ app.get('/', (req, res) => {
   res.send('Lead Management System API is Online and Running!');
 });
 
-// Outbound SMTP Diagnostic Verifier
-const transporterTest = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.SMTP_MAIL,
-    pass: process.env.SMTP_PASSWORD,
-  },
-});
-
-transporterTest.verify((error, success) => {
-  if (error) {
-    console.log("❌ SMTP Setup Failure! Gmail App Password or Username is incorrect:", error.message);
-  } else {
-    console.log("✅ SMTP Server is authenticated and fully ready to dispatch emails!");
-  }
-});
+// NOTE: The problematic SMTP .verify() loop has been removed here 
+// to prevent Render's cloud firewall from freezing the boot routine.
 
 // Database connection & Server Boot
 connectDB().then(() => {
