@@ -7,14 +7,20 @@ import leadRoutes from './routes/leadRoutes.js';
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// Middleware - Configured to accept requests from Vercel
+app.use(cors({
+  origin: [
+    'http://localhost:5173', 
+    'https://lead-management-system-sepia.vercel.app'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
-// Routes
-app.use('/', leadRoutes);
+// Routes - Prefixed with /api to match your frontend services!
+app.use('/api', leadRoutes);
 
-// Optional: Test Root Route to confirm backend is alive
+// Test Root Route to confirm backend is alive
 app.get('/', (req, res) => {
   res.send('Lead Management System API is Online and Running!');
 });
